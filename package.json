@@ -1,12 +1,23 @@
 {
-  "name": "api-to-mirage-fixtures",
+  "name": "mirage-glue",
   "version": "1.0.0",
   "description": "This program reads your specified API endpoint and creates/appends the data to a mirage fixture file",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Izel Nakri",
+  "bin": {
+    "mirage-glue": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/izelnakri/mirage-glue.git"
+  },
+  "author": {
+    "name": "Izel Nakri",
+    "email": "contact@izelnakri.com",
+    "url": "https://github.com/izelnakri"
+  },
   "license": "MIT",
   "dependencies": {
     "em": "^0.0.2",
