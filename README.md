@@ -1,4 +1,4 @@
-```bash
+```{r, engine='bash', count_lines}
   $ npm install -g mirage-glue
 
   $ mirage-glue localhost:4000/unicorns
