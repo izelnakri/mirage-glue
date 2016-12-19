@@ -28,11 +28,7 @@ request(endpoint).then((data) => {
   const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (fs.existsSync(targetFile)) {
-    console.log(`${targetFile} exists, appending operation start:`);
-    // require below doesnt work for global!!:
     const currentData = require(`${process.cwd()}/${targetFile}`)['default'];
-    console.log('currentData is:');
-    console.log(currentData);
     const newData = _.uniqBy(currentData.concat(targetData), 'id');
 
     fs.writeFile(targetFile, 'export default ' + util.inspect(newData, { depth: null }) + ';', (error) => {
