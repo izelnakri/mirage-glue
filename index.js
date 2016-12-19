@@ -114,7 +114,7 @@ function prepareData(data) {
 
 function removeCertainProperties(obj) {
   return Object.keys(obj).reduce((result, key, index) => {
-    if (key === 'link') {
+    if (key === 'links') {
       return result;
     }
 
