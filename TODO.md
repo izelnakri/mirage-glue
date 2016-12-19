@@ -1,2 +1,1 @@
-- make the fixtures slightly more readable with line formatting.
 - generate Elixir fixture files on the fly

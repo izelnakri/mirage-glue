@@ -1,4 +1,6 @@
 #! /usr/bin/env node
+require('locus');
+
 require('babel-register')({
    presets: [ 'es2015' ]
 });
@@ -55,6 +57,7 @@ request(endpoint).then((data) => {
   }
 
   startSerialization(data);
+
   serializationQueue.flushAll();
 }).catch((error) => { throw error; });
 
@@ -76,8 +79,6 @@ function startSerialization(data) {
 }
 
 function appendToFixtureFile(targetFile, newData) {
-  console.log(chalk.red('append called'));
-
   // warning: this require has caching:
   const existingData = require(`${process.cwd()}/${targetFile}`)['default'];
   const combinedData = _.uniqBy(existingData.concat(newData), 'id');
@@ -87,10 +88,19 @@ function appendToFixtureFile(targetFile, newData) {
   writeToFixtureFile(targetFile, combinedData);
 }
 
-function writeToFixtureFile(targetFile, data, func = function() {}) {
-  fs.writeFileSync(targetFile, `export default ${util.inspect(data, { depth: null })};`);
+function writeToFixtureFile(targetFile, data) {
+  const fixtureData = objectFormatter(util.inspect(data, { depth: null }));
+
+  fs.writeFileSync(targetFile, `export default ${fixtureData};`);
+
   console.log(chalk.green(`Data written to ${targetFile}`));
   console.log(chalk.yellow(`Fixture file has ${data.length} elements`));
+
+  function objectFormatter(object) {
+    // this might slow down things a bit but awesome formatting:
+    return object.replace(/\[ {/g, '[\n  {').replace(/{/g , '{\n   ')
+                .replace(/}/g, '\n  }').replace(/\]/g, '\n]');
+  }
 }
 
 function prepareData(data) {
