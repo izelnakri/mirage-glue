@@ -25,14 +25,12 @@ request(endpoint).then((data) => {
   const jsonModelKey = inflector.pluralize(Object.keys(data)[0]);
 
   const targetData = ignoreCertainProperties(data, endpoint);
-  const targetFile = `./mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
+  const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (fs.existsSync(targetFile)) {
-    console.log('process.cwd() is:');
-    console.log(process.cwd());
-    console.log(`${targetFile} exists, appending to this file:`);
+    console.log(`${targetFile} exists, appending operation start:`);
     // require below doesnt work for global!!:
-    const currentData = require(targetFile)['default'];
+    const currentData = require(`${process.cwd()}/${targetFile}`)['default'];
     console.log('currentData is:');
     console.log(currentData);
     const newData = _.uniqBy(currentData.concat(targetData), 'id');
