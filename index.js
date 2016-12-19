@@ -87,7 +87,19 @@ function appendToFixtureFile(targetFile, newData) {
 }
 
 function writeToFixtureFile(targetFile, data) {
-  const fixtureData = objectFormatter(util.inspect(data, { depth: null }));
+  const fixtureData = objectFormatter(
+    util.inspect(data.sort((a, b) => {
+      if (a.id > b.id) {
+        return 1;
+      }
+
+      if (a.id < b.id) {
+        return -1;
+      }
+
+      return 0;
+    }), { depth: null })
+  );
 
   fs.writeFileSync(targetFile, `export default ${fixtureData};`);
 
@@ -115,6 +127,7 @@ function prepareData(data) {
 function removeCertainProperties(obj) {
   return Object.keys(obj).reduce((result, key, index) => {
     if (key === 'links') {
+      console.log('links found');
       return result;
     }
 
