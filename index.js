@@ -17,7 +17,7 @@ const endpoint = process.argv[2];
 
 // singular endpoint vs plural endpoint: /companies/:id vs /companies needs tests
 request(endpoint).then((data) => {
-  if (!fs.existsSync('./mirage')) {
+  if (!fs.existsSync('mirage')) {
     console.log(chalk.red('Mirage folder doesnt exist for this directory!'));
     return;
   }
@@ -25,7 +25,7 @@ request(endpoint).then((data) => {
   const jsonModelKey = inflector.pluralize(Object.keys(data)[0]);
 
   const targetData = ignoreCertainProperties(data, endpoint);
-  const targetFile = `./mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
+  const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (fs.existsSync(targetFile)) {
     const currentData = require(targetFile)['default'];
