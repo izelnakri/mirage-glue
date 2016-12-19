@@ -15,10 +15,9 @@ const request = require('./custom-request');
 
 const endpoint = process.argv[2];
 
-// singular endpoint vs plural endpoint: /companies/:id vs /companies needs tests
 request(endpoint).then((data) => {
   if (!fs.existsSync('mirage')) {
-    console.log(chalk.red('Mirage folder doesnt exist for this directory!'));
+    console.log(chalk.red('Mirage folder doesn\'t exist for this directory!'));
     return;
   }
 
@@ -27,32 +26,44 @@ request(endpoint).then((data) => {
   const targetData = ignoreCertainProperties(data, endpoint);
   const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
-  if (fs.existsSync(targetFile)) {
-    const currentData = require(`${process.cwd()}/${targetFile}`)['default'];
-    const newData = _.uniqBy(currentData.concat(targetData), 'id');
-
-    fs.writeFile(targetFile, 'export default ' + util.inspect(newData, { depth: null }) + ';', (error) => {
-      if (error) { throw error; }
-      console.log(chalk.green('appending operation finished for ' + targetFile));
-      console.log(`Fixture file has ${newData.length} elements`);
-    });
-  } else {
-    mkdirp(getDirName(targetFile), (error) => {
+  if (!fs.existsSync(targetFile)) {
+    return mkdirp(getDirName(targetFile), (error) => {
       if (error) { throw error;  }
 
-      fs.writeFile(targetFile, 'export default ' + util.inspect(targetData, { depth: null }) + ';', (error) => {
-        if (error) { throw error; }
-        console.log(chalk.green('write operation finished for ' + targetFile));
-        console.log(`Fixture file has ${targetData.length} elements`);
-      });
+      return writeToFixtureFile(targetFile, targetData);
     });
   }
+
+  const currentData = require(`${process.cwd()}/${targetFile}`)['default'];
+  const newData = _.uniqBy(currentData.concat(targetData), 'id');
+
+  console.log(chalk.yellow(`appending data to file: ${targetFile}`));
+
+  writeToFixtureFile(targetFile, newData);
+
 }).catch(() => {});
+
+function appendToFixtureFile(targetFile, newData) {
+  const existingData = require(`${process.cwd()}/${targetFile}`)['default'];
+  const combinedData = _.uniqBy(existingData.concat(newData), 'id');
+
+  console.log(`appending data to file: ${targetFile}`);
+
+  writeToFixtureFile(targetFile, combinedData);
+}
+
+
+function writeToFixtureFile(targetFile, data) {
+  fs.writeFile(targetFile, 'export default ' + util.inspect(data, { depth: null }) + ';', (error) => {
+    if (error) { throw error; }
+    console.log(chalk.green(`Data written to ${targetFile}`));
+    console.log(chalk.yellow(`Fixture file has ${data.length} elements`));
+  });
+}
 
 
 function ignoreCertainProperties(data, endpoint) {
   // what about ignoring hasOne embeds?
-
   const jsonModelKey = Object.keys(data)[0];
   let ignoredPropertiesList = ['links'];
 
