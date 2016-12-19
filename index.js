@@ -15,15 +15,53 @@ const request = require('./custom-request');
 
 const endpoint = process.argv[2];
 
+let serializationQueue = function() {
+  let modelQueues = {};
+
+  return {
+    push(modelName, data) {
+      const emberModelKey = formatName(modelName);
+      const queue = modelQueues[emberModelKey];
+
+      if (!queue) {
+        return createQueue(emberModelKey, data);
+      }
+
+      return queue.push(data);
+    },
+    flushAll() {
+      Object.keys(modelQueues).forEach((emberModelKey) => writeToFile(emberModelKey));
+    }
+  };
+
+  function formatName(name) {
+    return inflector.pluralize(inflector.underscore(name));
+  }
+
+  function createQueue(modelName, data) {
+    modelQueues[modelName] = [data];
+  }
+
+  function writeToFile(modelName) {
+    startSerialization({ [modelName]: modelQueues[modelName] });
+  }
+}();
+
 request(endpoint).then((data) => {
   if (!fs.existsSync('mirage')) {
+    // helpful message for people who dont use mirage:
     console.log(chalk.red('Mirage folder doesn\'t exist for this directory!'));
     return;
   }
 
-  const jsonModelKey = inflector.pluralize(Object.keys(data)[0]);
+  startSerialization(data);
+  serializationQueue.flushAll();
+}).catch((error) => { throw error; });
 
-  const targetData = ignoreCertainProperties(data, endpoint);
+function startSerialization(data) {
+  const jsonModelKey = inflector.pluralize(Object.keys(data)[0]);
+  const targetData = prepareData(data, endpoint);
+
   const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (!fs.existsSync(targetFile)) {
@@ -34,16 +72,13 @@ request(endpoint).then((data) => {
     });
   }
 
-  const currentData = require(`${process.cwd()}/${targetFile}`)['default'];
-  const newData = _.uniqBy(currentData.concat(targetData), 'id');
-
-  console.log(chalk.yellow(`appending data to file: ${targetFile}`));
-
-  writeToFixtureFile(targetFile, newData);
-
-}).catch(() => {});
+  appendToFixtureFile(targetFile, targetData);
+}
 
 function appendToFixtureFile(targetFile, newData) {
+  console.log(chalk.red('append called'));
+
+  // warning: this require has caching:
   const existingData = require(`${process.cwd()}/${targetFile}`)['default'];
   const combinedData = _.uniqBy(existingData.concat(newData), 'id');
 
@@ -52,37 +87,35 @@ function appendToFixtureFile(targetFile, newData) {
   writeToFixtureFile(targetFile, combinedData);
 }
 
-
-function writeToFixtureFile(targetFile, data) {
-  fs.writeFile(targetFile, 'export default ' + util.inspect(data, { depth: null }) + ';', (error) => {
-    if (error) { throw error; }
-    console.log(chalk.green(`Data written to ${targetFile}`));
-    console.log(chalk.yellow(`Fixture file has ${data.length} elements`));
-  });
+function writeToFixtureFile(targetFile, data, func = function() {}) {
+  fs.writeFileSync(targetFile, `export default ${util.inspect(data, { depth: null })};`);
+  console.log(chalk.green(`Data written to ${targetFile}`));
+  console.log(chalk.yellow(`Fixture file has ${data.length} elements`));
 }
 
-
-function ignoreCertainProperties(data, endpoint) {
-  // what about ignoring hasOne embeds?
-  const jsonModelKey = Object.keys(data)[0];
-  let ignoredPropertiesList = ['links'];
-
-  let actualData = data[inflector.singularize(jsonModelKey)] || data[inflector.pluralize(jsonModelKey)];
+function prepareData(data) {
+  const jsonKey = Object.keys(data)[0];
+  const actualData = data[inflector.singularize(jsonKey)] || data[inflector.pluralize(jsonKey)];
 
   if (Array.isArray(actualData)) {
-    return actualData.map((element) => removeIgnoredProperties(element));
-  } else {
-    return [ removeIgnoredProperties(actualData) ];
+    return actualData.map((element, index) => removeCertainProperties(element));
   }
 
-  function removeIgnoredProperties(obj) {
-    return Object.keys(obj).reduce((result, key, index) => {
-      if (ignoredPropertiesList.includes(key)) {
-        return result;
-      }
+  return [ removeCertainProperties(actualData) ];
+}
 
-      result[key] = obj[key];
+function removeCertainProperties(obj) {
+  return Object.keys(obj).reduce((result, key, index) => {
+    if (key === 'link') {
       return result;
-    }, {});
-  }
+    }
+
+    if (obj[key] && obj[key].id) {
+      serializationQueue.push(key, obj[key]);
+      return result;
+    }
+
+    result[key] = obj[key];
+    return result;
+  }, {});
 }

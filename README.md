@@ -13,3 +13,5 @@ This library fetches server api endpoints you provide and writes or appends to m
   appending operation finished for ./mirage/fixtures/unicorns.js
   Fixture file has 21 elements
 ```
+
+If you have an embedded hasOne() or belongsTo() relationship in your json API response the embedded record also gets created in its relevant fixture file!! 
