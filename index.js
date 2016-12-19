@@ -1,6 +1,4 @@
 #! /usr/bin/env node
-require('locus');
-
 require('babel-register')({
    presets: [ 'es2015' ]
 });
@@ -79,7 +77,7 @@ function startSerialization(data) {
 }
 
 function appendToFixtureFile(targetFile, newData) {
-  // warning: this require has caching:
+  // warning: this require() has caching:
   const existingData = require(`${process.cwd()}/${targetFile}`)['default'];
   const combinedData = _.uniqBy(existingData.concat(newData), 'id');
 
