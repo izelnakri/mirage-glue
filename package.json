@@ -1,13 +1,13 @@
 {
   "name": "mirage-glue",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "This program reads your specified API endpoint and creates/appends the data to a mirage fixture file",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "mirage-glue": "index.js"
+    "mirage-glue": "node index.js"
   },
   "repository": {
     "type": "git",
