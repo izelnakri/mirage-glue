@@ -1,1 +1,1 @@
-- generate Elixir fixture files on the fly
+- elixir-app= and authentication-token= options for mirage-glue
