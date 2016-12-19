@@ -25,10 +25,13 @@ request(endpoint).then((data) => {
   const jsonModelKey = inflector.pluralize(Object.keys(data)[0]);
 
   const targetData = ignoreCertainProperties(data, endpoint);
-  const targetFile = `mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
+  const targetFile = `./mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (fs.existsSync(targetFile)) {
+    console.log(`${targetFile} exists, appending to this file:`);
     const currentData = require(targetFile)['default'];
+    console.log('currentData is:');
+    console.log(currentData);
     const newData = _.uniqBy(currentData.concat(targetData), 'id');
 
     fs.writeFile(targetFile, 'export default ' + util.inspect(newData, { depth: null }) + ';', (error) => {
