@@ -28,8 +28,8 @@ request(endpoint).then((data) => {
   const targetFile = `./mirage/fixtures/${inflector.dasherize(jsonModelKey)}.js`;
 
   if (fs.existsSync(targetFile)) {
-    console.log('dirname is:');
-    console.log(__dirname);
+    console.log('process.cwd() is:');
+    console.log(process.cwd());
     console.log(`${targetFile} exists, appending to this file:`);
     // require below doesnt work for global!!:
     const currentData = require(targetFile)['default'];
