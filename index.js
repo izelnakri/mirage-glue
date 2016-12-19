@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 require('babel-register')({
    presets: [ 'es2015' ]
 });
@@ -51,7 +52,7 @@ request(endpoint).then((data) => {
 
 function ignoreCertainProperties(data, endpoint) {
   // what about ignoring hasOne embeds?
-  
+
   const jsonModelKey = Object.keys(data)[0];
   let ignoredPropertiesList = ['links'];
 
