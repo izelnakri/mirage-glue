@@ -125,7 +125,7 @@ function writeToFixtureFile(targetFile, data) {
       }
 
       return 0;
-    }), { depth: null })
+    }), { depth: null, maxArrayLength: null })
   );
 
   writeToElixirFixtureFile(targetFile, fixtureData);

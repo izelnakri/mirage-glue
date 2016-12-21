@@ -19,8 +19,7 @@ const request = (endpoint) => {
         console.log(chalk.red(error.message));
         // consume response data to free up memory
         res.resume();
-        reject(error);
-        return;
+        return reject(error);
       }
 
       res.setEncoding('utf8');
