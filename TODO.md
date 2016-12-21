@@ -1,3 +1,1 @@
 - elixir-app= and authentication-token= options for mirage-glue
-- changes info (+5 records), (no changes)
-- show total file size

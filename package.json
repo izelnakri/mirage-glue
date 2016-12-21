@@ -1,6 +1,6 @@
 {
   "name": "mirage-glue",
-  "version": "1.4.3",
+  "version": "1.4.9",
   "description": "This program reads your specified API endpoint and creates/appends the data to a mirage fixture file",
   "main": "index.js",
   "scripts": {
