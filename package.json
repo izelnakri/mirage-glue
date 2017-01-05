@@ -1,7 +1,7 @@
 {
   "name": "mirage-glue",
-  "version": "1.5.8",
-  "description": "This program reads your specified API endpoint and creates/appends the data to a mirage fixture file",
+  "version": "1.5.9",
+  "description": "Generate mirage fixture file(s) from your api endpoint",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
