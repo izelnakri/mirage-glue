@@ -42,11 +42,11 @@ When you provide an elixir-app=YourElixirAppName option, elixir fixture files ar
   $ mirage-glue localhost:4000/hackers elixir-app=TheMatrix
   Data written to ./mirage/fixtures/hackers.js (File size: 17 KB)
   Fixture file has 6 elements (+6)
-  Data written to ../backend/test/support/fixtures/hacker.ex (File size: 21 KB)
   appending data to file: mirage/fixtures/human-subjects.js
   Data written to ./mirage/fixtures/human-subjects.js (File size: 68 KB)
   Fixture file has 8 elements (+6)
   Data written to ../backend/test/support/fixtures/human_subject.ex (File size: 72 KB)
+  Data written to ../backend/test/support/fixtures/hacker.ex (File size: 21 KB)
 ```
 
 You can read the contents of the fixture files to understand how the use fixtures in Elixir tests. One big caveat of using fixtures in the backend is you might not have the referenced relationship of the fixture record thus foreign_key constraints prevent your fixtures from getting inserted to the database. The generated elixir fixture files use the `fixturist` elixir library to source referenced relationship from development database to the test database along with your fixture insertion.
