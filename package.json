@@ -1,6 +1,6 @@
 {
   "name": "mirage-glue",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Generate mirage fixture file(s) from your api endpoint",
   "main": "index.js",
   "scripts": {
