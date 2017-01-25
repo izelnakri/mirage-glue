@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 require('babel-register')({
-   presets: [ 'es2015' ]
+  presets: [ 'es2015' ]
 });
 
 const chalk = require('chalk');
