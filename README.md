@@ -37,7 +37,7 @@ If you want to ignore nested parsing/fixture creation of relationships/objects y
 For routes that are hidden behind Bearer token authentication you can use the ```--token``` option flag:
 
 ```{r, engine='bash', count_lines}
-  $ mirage-glue localhost:4000/me --token="aBcdDjtQQ5_u0Ke--yWfDIn9pZPXl8TYiQuJS-LKNUMP-efxi0lr2r1TLUS3Bttr"
+  $ mirage-glue localhost:4000/me --token="Bearer aBcdDjtQQ5_u0Ke--yWfDIn9pZPXl8TYiQuJS-LKNUMP-efxi0lr2r1TLUS3Bttr"
   Data written to mirage/fixtures/users.js (File size: 0.89 KB)
   Fixture file has 1 records (+1)
   Data written to mirage/fixtures/phone-numbers.js (File size: 0.32 KB)
