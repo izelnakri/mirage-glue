@@ -20,10 +20,10 @@ Example:
 ```{r, engine='bash', count_lines}
   $ mirage-glue localhost:4000/blog-posts
   Data written to ./mirage/fixtures/blog-posts.js (File size: 82 KB)
-  Fixture file has 20 elements (+20)
+  Fixture file has 20 records (+20)
   appending data to file: mirage/fixtures/categories.js
   Data written to ./mirage/fixtures/categories.js (File size: 22 KB)
-  Fixture file has 21 elements (+1)
+  Fixture file has 21 records (+1)
 ```
 
 If you want to ignore nested parsing/fixture creation of relationships/objects you can provide ```--ignore-nesting``` option flag:
@@ -31,8 +31,21 @@ If you want to ignore nested parsing/fixture creation of relationships/objects y
 ```{r, engine='bash', count_lines}
   $ mirage-glue localhost:4000/blog-posts --ignore-nesting
   Data written to ./mirage/fixtures/blog-posts.js (File size: 102 KB)
-  Fixture file has 20 elements (+20)
+  Fixture file has 20 records (+20)
 ```
+
+For routes that are hidden behind Bearer token authentication you can use the ```--token``` option flag:
+
+```{r, engine='bash', count_lines}
+  $ mirage-glue localhost:4000/me --token="aBcdDjtQQ5_u0Ke--yWfDIn9pZPXl8TYiQuJS-LKNUMP-efxi0lr2r1TLUS3Bttr"
+  Data written to mirage/fixtures/users.js (File size: 0.89 KB)
+  Fixture file has 1 records (+1)
+  Data written to mirage/fixtures/phone-numbers.js (File size: 0.32 KB)
+  Fixture file has 1 records (+1)
+  Data written to mirage/fixtures/emails.js (File size: 0.40 KB)
+  Fixture file has 1 records (+1)
+```
+
 
 #### Bonus: Using the same fixture data in Phoenix/Elixir tests:
 
@@ -41,10 +54,10 @@ When you provide an elixir-app=YourElixirAppName option, elixir fixture files ar
 ```{r, engine='bash', count_lines}
   $ mirage-glue localhost:4000/hackers elixir-app=TheMatrix
   Data written to ./mirage/fixtures/hackers.js (File size: 17 KB)
-  Fixture file has 6 elements (+6)
+  Fixture file has 6 records (+6)
   appending data to file: mirage/fixtures/human-subjects.js
   Data written to ./mirage/fixtures/human-subjects.js (File size: 68 KB)
-  Fixture file has 8 elements (+6)
+  Fixture file has 8 records (+6)
   Data written to ../backend/test/support/fixtures/human_subject.ex (File size: 72 KB)
   Data written to ../backend/test/support/fixtures/hacker.ex (File size: 21 KB)
 ```
